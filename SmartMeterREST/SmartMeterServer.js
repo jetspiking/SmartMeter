@@ -38,6 +38,7 @@ let P1_OBIS_REFERENCES = [
 const queryTypeGetAll = 0;
 const queryTypeGetLast = 1;
 const queryTypeGetHour = 2;
+const queryTypeGetDay = 3;
 
 //===========================================================================
 //							INITIALIZATION
@@ -97,7 +98,6 @@ var queryTopic = 'SmartMeter';
 mqttClient.on('connect', ()=> {
 	mqttClient.subscribe(queryTopic);
 	console.log('Subscribed To \"'+mqttServer+'\".');
-	mqttClient.publish(queryTopic,'Listener Connected.');
 })
 
 mqttClient.on('message', (topic,message) => {
@@ -112,7 +112,10 @@ mqttClient.on('message', (topic,message) => {
 
 const express = require("express");
 const apiPort = 3000;
+const cors = require('cors');
 const app = express();
+
+app.use(cors());
 
 app.listen(apiPort, () => {
  console.log('RESTful API running');
@@ -200,14 +203,29 @@ async function getFromDatabase(queryType)
 			queryResult = queryData.pop();
 			break;
 		case queryTypeGetHour:
-			let hour=[60];
+			{
+			var desiredMessages=6*60;
+			let hour=[desiredMessages];
 			var i;
 			
-			for (i=0; i < queryData.length && i < 60; i++) 
+			for (i=0; i < queryData.length && i < desiredMessages; i++) 
 				hour.push(queryData[i]);
 
 			queryResult=hour;
-			break;		
+			}
+			break;	
+		case queryTypeGetDay:
+			{
+			var desiredMessages=6*60*24;
+			let hour=[desiredMessages];
+			var i;
+			
+			for (i=0; i < queryData.length && i < desiredMessages; i++)
+				hour.push(queryData[i]);
+
+			queryResult=hour;
+			}
+			break;	
 	}
 
 	return queryResult;	
@@ -237,5 +255,11 @@ app.get("/last", runAsyncWrapper(async(req,res,next) =>
 app.get("/hour", runAsyncWrapper(async(req,res,next) => 
 {
 	var queryResult = await getFromDatabase(queryTypeGetHour);
+	res.json(queryResult);
+}));
+
+app.get("/day", runAsyncWrapper(async(req,res,next) => 
+{
+	var queryResult = await getFromDatabase(queryTypeGetDay);
 	res.json(queryResult);
 }));
