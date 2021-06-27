@@ -3,8 +3,8 @@
 #include "string.h"
 #include "memory"
 
-#define WiFi_SSID "VGV75196830FE"               
-#define WiFi_PASSWORD "C7354F291A1212"        
+#define WiFi_SSID "********"               
+#define WiFi_PASSWORD "********"        
 
 class WiFiSetup
 {
