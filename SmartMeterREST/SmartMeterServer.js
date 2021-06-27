@@ -29,7 +29,9 @@ let P1_OBIS_REFERENCES = [
 	['1-0:61.7.0','InstantaneousActivePowerL3PlusP','Instantaneous Active Power Phase L3 (+P)'],
 	['1-0:22.7.0','InstantaneousActivePowerL1MinusP','Instantaneous Active Power Phase L1 (-P)'],
 	['1-0:42.7.0','InstantaneousActivePowerL2MinusP','Instantaneous Active Power Phase L2 (-P)'],
-	['1-0:62.7.0','InstantaneousActivePowerL3MinusP','Instantaneous Active Power Phase L3 (-P)']
+	['1-0:62.7.0','InstantaneousActivePowerL3MinusP','Instantaneous Active Power Phase L3 (-P)'],
+	['u-o:1.0.0','TemperatureSensorData','Temperature Sensor Data'],
+	['u-o:1.0.1','HumiditySensorData','Humidity Sensor Data']
 ];
 
 
@@ -56,7 +58,7 @@ var connected=false;
 database.on('error',console.error.bind(console,'connection error'));
 
 
-const P1DatagramSchema = new mongoose.Schema 
+const P1DatagramSchema = new mongoose.Schema
 ({
 	items:Object,
 	datetime:String
@@ -71,7 +73,7 @@ const ObisReferenceSchema = new mongoose.Schema
 	id: String,
 	value: String,
 	description: String
-}, 
+},
 {
 	versionKey: false
 });
@@ -94,7 +96,7 @@ const mqttServer = 'mqtt://test.mosquitto.org:1883';
 
 var mqttClient  = mqtt.connect(mqttServer);
 var queryTopic = 'SmartMeter';
- 
+
 mqttClient.on('connect', ()=> {
 	mqttClient.subscribe(queryTopic);
 	console.log('Subscribed To \"'+mqttServer+'\".');
@@ -127,7 +129,7 @@ app.listen(apiPort, () => {
 
 // MQTT Reading
 
-function handleSmartMeterDatagram(message) 
+function handleSmartMeterDatagram(message)
 {
 	var seperatedSubstrings = message.toString().split('\n');
 	let itemArray = [];
@@ -137,28 +139,28 @@ function handleSmartMeterDatagram(message)
 		P1_OBIS_REFERENCES.forEach(obisReference=> {
 
 			var found = messageItem.includes(obisReference[0]);
-			
-			if (found) 
-			{			
+
+			if (found)
+			{
 				var r = obisReference[0];
 				var i = obisReference[1];
-				var v = messageItem.substring(obisReference[0].length+1,messageItem.indexOf(')'));	
+				var v = messageItem.substring(obisReference[0].length+1,messageItem.indexOf(')'));
 				var d = obisReference[2];
-				
+
 				itemArray.push(new ObisReference({reference:r,id:i,value:v,description:d}));
 
-				return;	
+				return;
 			}
-		
+
 		});
 
-		if (messageItem.includes('/')) 
+		if (messageItem.includes('/'))
 		{
 			var r = '0.0.0';
 			var i = 'SmartMeterModel';
-			var v = messageItem.substring(1, messageItem.length-1);	
+			var v = messageItem.substring(1, messageItem.length-1);
 			var d = 'Smart Meter Model Information';
-			
+
 			itemArray.push(new ObisReference({reference:r,id:i,value:v,description:d}))
 		}
 
@@ -171,29 +173,29 @@ function handleSmartMeterDatagram(message)
 
 // MongoDB Storing
 
-function addToDatabase(object) 
+function addToDatabase(object)
 {
-	if (connected) 
+	if (connected)
 	{
-		object.save(function (err,res) 
+		object.save(function (err,res)
 		{
 			if (err) return console.error(err);
 		});
 	}
 
-	else 
+	else
 		console.log("Database not connected, have you installed and launched MongoDB-Community-Server locally?");
 }
 
 // MongoDB Getting
 
-async function getFromDatabase(queryType) 
+async function getFromDatabase(queryType)
 {
 	queryData = await P1Datagram.find({});
-	
+
 	var queryResult;
-	
-	switch(queryType) 
+
+	switch(queryType)
 	{
 
 		case queryTypeGetAll:
@@ -207,58 +209,58 @@ async function getFromDatabase(queryType)
 			var desiredMessages=6*60;
 			let hour=[desiredMessages];
 			var i;
-			
-			for (i=0; i < queryData.length && i < desiredMessages; i++) 
-				hour.push(queryData[i]);
 
-			queryResult=hour;
-			}
-			break;	
-		case queryTypeGetDay:
-			{
-			var desiredMessages=6*60*24;
-			let hour=[desiredMessages];
-			var i;
-			
 			for (i=0; i < queryData.length && i < desiredMessages; i++)
 				hour.push(queryData[i]);
 
 			queryResult=hour;
 			}
-			break;	
+			break;
+		case queryTypeGetDay:
+			{
+			var desiredMessages=6*60*24;
+			let hour=[desiredMessages];
+			var i;
+
+			for (i=0; i < queryData.length && i < desiredMessages; i++)
+				hour.push(queryData[i]);
+
+			queryResult=hour;
+			}
+			break;
 	}
 
-	return queryResult;	
+	return queryResult;
 }
 
 // RESTful-api requests
 
 function runAsyncWrapper (callback) {
-	return function (req, res, next) 
+	return function (req, res, next)
 	{
 	  callback(req, res, next).catch(next)
 	}
 }
 
-app.get("/all", runAsyncWrapper(async(req,res,next) => 
+app.get("/all", runAsyncWrapper(async(req,res,next) =>
 {
 	var queryResult = await getFromDatabase(queryTypeGetAll);
 	res.json(queryResult);
 }));
 
-app.get("/last", runAsyncWrapper(async(req,res,next) => 
-{	
+app.get("/last", runAsyncWrapper(async(req,res,next) =>
+{
 	var queryResult = await getFromDatabase(queryTypeGetLast);
 	res.json(queryResult);
 }));
 
-app.get("/hour", runAsyncWrapper(async(req,res,next) => 
+app.get("/hour", runAsyncWrapper(async(req,res,next) =>
 {
 	var queryResult = await getFromDatabase(queryTypeGetHour);
 	res.json(queryResult);
 }));
 
-app.get("/day", runAsyncWrapper(async(req,res,next) => 
+app.get("/day", runAsyncWrapper(async(req,res,next) =>
 {
 	var queryResult = await getFromDatabase(queryTypeGetDay);
 	res.json(queryResult);
