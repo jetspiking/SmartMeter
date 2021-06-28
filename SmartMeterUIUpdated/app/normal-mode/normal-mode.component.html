@@ -1,0 +1,36 @@
+
+<body class="normal_page">
+
+    <div class="container_horizontal">
+      <div> <a class= "hor_button" id="allDataButton" mat-raised-button color= "accent">All</a> </div>
+      <div> <a class= "hor_button" id="dayDataButton" mat-raised-button color= "accent">Day</a> </div>
+      <div> <a class= "hor_button" id="hourDataButton" mat-raised-button color= "accent">Hour</a> </div>
+      <div> <a class= "hor_button" id="lastDataButton" mat-raised-button color= "accent">Last</a> </div>
+      <div> <a class= "hor_button" id="generateChartButton" mat-raised-button color="accent">Chart</a> </div>
+      <select class="select_button" id="selectDataBox" color="accent">Select</select>
+    </div>
+
+    <div class="scroll_container_class" id="scroll_container">
+      <div class="container" style="float:left; height: 10px;"  id="timestampMainContainer">
+          <div id="labelContainer"></div>
+          <div id="timestampList"></div>
+      </div>
+
+      <div class="container_detailed" style="float:left;width:330px; height: 10px;" id="datagramMainContainer">
+        <div id="datagramDetailedLabelContainer"></div>
+        <div id="datagramDetailedList"></div>
+      </div>
+
+      <div class="container_graph" style="float:center" id="graphMainContainer">
+        <div id="graphLabelContainer"></div>
+        <div id="graphContainer">
+            <div echarts [options]="chartOption" class="demo-chart"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="avans_logo">
+        <img src="assets/logo-white-2.png">
+    </div> -->
+
+</body>

@@ -1,0 +1,7 @@
+/* You can add global styles to this file, and also import other style files */
+html *
+{
+   font-size: 1em !important;
+   color: yellow !important;
+   font-family: Arial !important;
+}

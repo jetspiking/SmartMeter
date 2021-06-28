@@ -1,0 +1,17 @@
+html, body {
+    overflow: hidden;
+    display: block;
+}
+
+body.mat-typography
+{
+    display: block;
+}
+
+.enexis_logo img{
+    max-height: 5vh;
+    max-width: 5vw;
+    position: absolute;
+    left: 1%;
+    top: 1%;
+}

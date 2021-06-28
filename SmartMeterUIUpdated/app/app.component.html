@@ -1,0 +1,13 @@
+<body class="mat-app-background" [ngClass] = "{'dark-theme-mode' : isDarkTheme}" >
+  <div>
+    <mat-toolbar color="primary">
+      <div class="enexis_logo">
+        <img src="assets/logo-enexis2.png">
+      </div>
+      <span style="flex:auto;"></span>
+      <mat-slide-toggle [(ngModel)] = "isDarkTheme" labelPosition = "before" (change)= "storeThemeSelection()">
+        <span class="material-icons">bedtime</span></mat-slide-toggle>
+    </mat-toolbar>
+  </div>
+  <router-outlet></router-outlet>
+</body>

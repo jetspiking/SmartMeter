@@ -1,0 +1,219 @@
+@import '~@angular/material/theming';
+
+// Be sure that you only ever include 'mat-core' mixin once!
+// it should not be included for each theme.
+@include mat-core(); 
+
+// define a real custom palette (using http://mcg.mbitson.com)
+$pa-primary: (
+    50 : #f7fbe1,
+    100 : #ebf4b3,
+    200 : #deed80,
+    300 : #d1e64d,
+    400 : #c7e027,
+    500 : #bddb01,
+    600 : #b7d701,
+    700 : #aed201,
+    800 : #a6cd01,
+    900 : #98c400,
+    A100 : #faffec,
+    A200 : #edffb9,
+    A400 : #e0ff86,
+    A700 : #daff6d,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #000000,
+        500 : #000000,
+        600 : #000000,
+        700 : #000000,
+        800 : #000000,
+        900 : #000000,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
+);
+
+$pa-lightaccent: (
+    0 : #fbe0ee,
+    100 : #f5b3d5,
+    200 : #ef80b9,
+    300 : #e84d9c,
+    400 : #e32687,
+    500 : #de0072,
+    600 : #da006a,
+    700 : #d5005f,
+    800 : #d10055,
+    900 : #c80042,
+    A100 : #fff1f4,
+    A200 : #ffbece,
+    A400 : #ff8ba9,
+    A700 : #ff7196,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #ffffff,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
+);
+
+$pa-darkaccent: (
+    50 : #e3eef8,
+    100 : #b9d4ed,
+    200 : #8ab8e2,
+    300 : #5b9bd6,
+    400 : #3785cd,
+    500 : #1470c4,
+    600 : #1268be,
+    700 : #0e5db6,
+    800 : #0b53af,
+    900 : #0641a2,
+    A100 : #cdddff,
+    A200 : #9abaff,
+    A400 : #6798ff,
+    A700 : #4d87ff,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #ffffff,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
+);
+
+$pa-lightback: (
+    50 : #fefefe,
+    100 : #fdfdfc,
+    200 : #fcfcfb,
+    300 : #fafaf9,
+    400 : #f9f9f7,
+    500 : #f8f8f6,
+    600 : #f7f7f5,
+    700 : #f6f6f3,
+    800 : #f5f5f2,
+    900 : #f3f3ef,
+    A100 : #ffffff,
+    A200 : #ffffff,
+    A400 : #ffffff,
+    A700 : #ffffff,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #000000,
+        500 : #000000,
+        600 : #000000,
+        700 : #000000,
+        800 : #000000,
+        900 : #000000,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
+);
+
+$pa-darkback: (
+    50 : #e8e8e8,
+    100 : #c6c6c6,
+    200 : #a0a0a0,
+    300 : #79797a,
+    400 : #5d5d5e,
+    500 : #404041,
+    600 : #3a3a3b,
+    700 : #323232,
+    800 : #2a2a2a,
+    900 : #1c1c1c,
+    A100 : #f07777,
+    A200 : #eb4949,
+    A400 : #ff0202,
+    A700 : #e70000,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #ffffff,
+        400 : #ffffff,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #ffffff,
+        A400 : #ffffff,
+        A700 : #ffffff,
+    )
+);
+
+// mandatory stuff for theming
+$pa-light-primary: mat-palette($pa-primary);
+$pa-light-accent:  mat-palette($pa-lightaccent);
+$pa-light-background:  mat-palette($pa-lightback);
+
+$pa-dark-primary: mat-palette($pa-darkaccent);
+$pa-dark-accent:  mat-palette($pa-primary);
+$pa-dark-background:  mat-palette($pa-lightback);
+
+// include the custom theme components into a theme object
+$pa-light-theme: mat-light-theme((
+  color: (
+    primary: $pa-light-primary,
+    accent: $pa-light-accent,
+  )
+));
+
+$pa-dark-theme: mat-dark-theme((
+  color: (
+    primary: $pa-dark-primary,
+    accent: $pa-light-accent,
+  )
+));
+
+// include the custom theme object into the angular material theme
+@include angular-material-theme($pa-light-theme);
+
+.dark-theme-mode{
+  @include angular-material-color($pa-dark-theme);
+}
+
+body {
+  margin: 0px;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+}
+
+body.mat-typography
+{
+  margin: 0px;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+}
